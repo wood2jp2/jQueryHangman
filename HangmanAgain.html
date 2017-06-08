@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<title>Hangman Game</title>
+		<script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	</head>
+	<body>
+
+		<ul class="list-group">
+  			<li class="list-group-item list-group-item-success">Wins: <span id="wins"></span></li>
+  			<li class="list-group-item list-group-item-info">Losses: <span id="losses"></span></li>
+  			<li class="list-group-item list-group-item-warning">Letters Guessed: <span id="guesses"> </span></li>
+  			<li class="list-group-item list-group-item-danger">Puzzle: <span id="puzzle"></span></li>
+  			<li class="list-group-item list-group-item-danger">Guesses Left: <span id="numberOfGuesses"></span></li>
+		</ul>
+
+		<script type="text/javascript">
+			$(document).ready( function() {
+				var puzzle = [];
+				var puzzleArray = ["cats", "tiger", "bear", "giraffe", "elephant", "shark", "parrot", "hummingbird", "whale"];
+				var wins = 0;
+				var losses = 0;
+				var puzzleChoice = puzzleArray[Math.floor(Math.random()*puzzleArray.length)];
+				var guessesLeft = 10;
+				var lettersGuessed = [];
+				
+						
+
+				function setUpPuzzle() {
+					guessesLeft = 10;
+					puzzle = [];
+					lettersGuessed = [];
+					$('#numberOfGuesses').text(guessesLeft);
+					$('#guesses').text(lettersGuessed);
+					$('#puzzle').text(puzzle);
+					puzzleChoice = puzzleArray[Math.floor(Math.random()*puzzleArray.length)];
+					for (var i = 0; i<puzzleChoice.length; i++) {
+						puzzle.push("_ ");
+						$("#puzzle").text(puzzle);
+					}
+				}
+
+				console.log(puzzleChoice);
+
+				document.onkeyup = function() {
+					var userGuess = event.key;
+					lettersGuessed.push(userGuess.toLowerCase());
+					$('#guesses').text(lettersGuessed+", ");
+
+					console.log(userGuess);
+					console.log(lettersGuessed);
+					
+					for (var j = 0; j<puzzleChoice.length; j++) {
+						if (userGuess === puzzleChoice[j]) {
+							puzzle[j] = userGuess;
+							$('#puzzle').text(puzzle);
+							guessesLeft += 1;
+						} else if (userGuess === "meta") {
+							alert("Please pick a LETTER!");
+						}
+					}
+
+					if (puzzleChoice === puzzle.join('')) {
+						alert("You win!");
+						wins+=1;
+						$('#wins').text(wins);
+						setUpPuzzle();
+					} else if (guessesLeft === 0) {
+						alert("You lose!");
+						losses+=1;
+						$('#losses').text(losses);
+						setUpPuzzle();
+					}
+					guessesLeft-=1;
+					$('#numberOfGuesses').text(guessesLeft);
+				}
+				setUpPuzzle();
+			});
+		</script>
+	</body>
+</html>
